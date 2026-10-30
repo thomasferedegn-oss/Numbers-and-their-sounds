@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Numbers 1 to 20 - Fun Audio Learning Game</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font for Playful Kids UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka', cursive, sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe, #fef3c7);
+    }
+    .bounce-hover:hover {
+      transform: translateY(-3px) scale(1.02);
+      transition: all 0.2s ease-in-out;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-gray-800 p-3 sm:p-6">
+
+  <!-- Top Navigation & Timer Bar -->
+  <header class="max-w-3xl mx-auto w-full flex justify-between items-center bg-white/90 backdrop-blur rounded-2xl shadow-md px-5 py-3 border-2 border-indigo-100">
+    <div class="flex items-center space-x-2">
+      <span class="text-2xl">🇬🇧 🎙️</span>
+      <span class="text-sm font-bold text-indigo-700 uppercase tracking-wide">British Golden Voice Narrator</span>
+    </div>
+    <!-- User Requested Timer -->
+    <div id="timer" style="text-align: right; font-weight: bold; color: #e74c3c; padding: 10px;">Time: 60m 00s</div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-3xl mx-auto w-full my-6 flex-grow flex items-center justify-center">
+
+    <!-- Screen 1: Registration / Intro -->
+    <section id="screen-intro" class="w-full bg-white rounded-3xl shadow-xl p-6 sm:p-10 border-4 border-amber-300">
+      <div class="text-center space-y-3 mb-8">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-amber-500 tracking-tight">🎈 Numbers 1 to 20 Fun Quest 🎈</h1>
+        <p class="text-gray-600 text-lg">Listen carefully to the British narrator, match the number symbols, words, and sounds!</p>
+        <p class="text-sm text-indigo-600 font-semibold">ቁጥሮችን ከ 1 እስከ 20 በድምጽና በጽሑፍ እንማር!</p>
+      </div>
+
+      <div class="space-y-4 max-w-md mx-auto">
+        <div>
+          <label class="block text-gray-700 font-bold mb-1">Student Full Name (የተማሪው ሙሉ ስም)</label>
+          <input type="text" id="student-name" placeholder="e.g. Samuel Yohannes" class="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:outline-none focus:border-amber-500 font-semibold text-lg">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-bold mb-1">Student ID / Roll No (መለያ ቁጥር)</label>
+          <input type="text" id="student-id" placeholder="e.g. YT-045" class="w-full px-4 py-3 rounded-xl border-2 border-amber-200 focus:outline-none focus:border-amber-500 font-semibold text-lg">
+        </div>
+
+        <button onclick="startGame()" class="w-full mt-6 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xl py-4 rounded-2xl shadow-lg bounce-hover transition">
+          🚀 Start Learning Game
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 2: Interactive Game / Quiz Area -->
+    <section id="screen-quiz" class="w-full bg-white rounded-3xl shadow-xl p-5 sm:p-8 border-4 border-indigo-200 hidden">
+      <!-- Progress and Audio Bar -->
+      <div class="flex flex-wrap justify-between items-center gap-3 pb-4 mb-4 border-b border-gray-100">
+        <span id="question-indicator" class="font-extrabold text-indigo-600 text-lg bg-indigo-50 px-4 py-1.5 rounded-full">Question 1 of 20</span>
+        <button onclick="playNarratorVoice()" class="flex items-center gap-2 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold px-4 py-2 rounded-full transition shadow-sm">
+          <span>🔊</span> <span>Listen with Golden Voice</span>
+        </button>
+      </div>
+
+      <!-- Question Card -->
+      <div id="question-container" class="space-y-5">
+        <div class="text-center py-2">
+          <p id="q-instruction" class="text-gray-500 font-bold text-sm tracking-wide uppercase">Listen and identify</p>
+          <h2 id="q-title" class="text-2xl sm:text-3xl font-extrabold text-gray-800 mt-1">What number do you hear and see?</h2>
+          <div id="q-visual" class="my-4 inline-block bg-indigo-50 border-2 border-indigo-200 rounded-2xl px-8 py-4 shadow-inner text-indigo-700 font-extrabold text-5xl">
+            1
+          </div>
+        </div>
+
+        <!-- Multiple Choice Options -->
+        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <!-- Dynamic Buttons Injected Here -->
+        </div>
+
+        <!-- Instant Dual-Language Explanation Box -->
+        <div id="explanation-box" class="hidden rounded-2xl p-4 border-2 transition-all">
+          <div class="font-extrabold text-lg mb-1 flex items-center gap-2" id="explanation-title"></div>
+          <p id="explanation-en" class="text-gray-800 font-medium text-base mb-1"></p>
+          <p id="explanation-am" class="text-gray-600 text-sm font-semibold"></p>
+        </div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-100">
+        <button id="btn-back" onclick="navigateQuestion(-1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl transition">
+          ⬅ Back
+        </button>
+        <button id="btn-skip" onclick="skipQuestion()" class="bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-5 py-2.5 rounded-xl transition">
+          Skip ↷
+        </button>
+        <button id="btn-next" onclick="navigateQuestion(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition">
+          Next ➡
+        </button>
+        <button id="btn-submit" onclick="submitQuiz()" class="hidden bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-7 py-2.5 rounded-xl shadow-lg transition">
+          Finish & Submit ✔
+        </button>
+      </div>
+    </section>
+
+    <!-- Screen 3: Result Summary & Submission Dashboard -->
+    <section id="screen-result" class="w-full bg-white rounded-3xl shadow-xl p-6 sm:p-10 border-4 border-emerald-300 hidden text-center">
+      <div class="space-y-4 mb-8">
+        <span class="text-6xl inline-block animate-bounce">🏆</span>
+        <h2 class="text-3xl font-extrabold text-gray-800">Spectacular Work! / በጣም ጎበዝ!</h2>
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-5 max-w-sm mx-auto">
+          <p class="text-gray-600 font-semibold" id="res-student-name">Student: -</p>
+          <p class="text-gray-600 font-semibold" id="res-student-id">ID: -</p>
+          <div class="mt-3 text-4xl font-black text-emerald-600" id="res-score">0 / 20</div>
+          <p class="text-sm font-bold text-gray-500 mt-1" id="res-percent">0% Completed</p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto">
+        <button onclick="sendScoreEmail()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition flex items-center justify-center gap-2">
+          <span>📧</span> <span>Send Results to Teacher</span>
+        </button>
+        <button onclick="location.reload()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3.5 px-6 rounded-2xl transition">
+          🔄 Play Again
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sound & Quiz Engine Logic -->
+  <script>
+    // 20 Number Items covering symbols, word spelling, sounds, and bilingual explanations
+    const quizData = [
+      { num: 1, word: "One", prompt: "Which word represents the number 1?", options: ["One", "Won", "Ten", "Two"], answer: "One", amharic: "1 በእንግሊዝኛ 'One' (ዋን) ተብሎ ይነበባል እንዲሁም ይጻፋል።" },
+      { num: 2, word: "Two", prompt: "Select the word for number 2:", options: ["To", "Two", "Three", "Too"], answer: "Two", amharic: "2 በእንግሊዝኛ 'Two' (ቱ) ተብሎ ይጻፋል።" },
+      { num: 3, word: "Three", prompt: "Identify the written name of 3:", options: ["Tree", "Three", "Free", "Third"], answer: "Three", amharic: "3 በእንግሊዝኛ 'Three' (ስሪ) ይባላል።" },
+      { num: 4, word: "Four", prompt: "What is the correct word for 4?", options: ["For", "Four", "Fore", "Five"], answer: "Four", amharic: "4 በእንግሊዝኛ 'Four' (ፎር) ተብሎ ይጻፋል።" },
+      { num: 5, word: "Five", prompt: "Which spelling stands for 5?", options: ["Five", "Fif", "Fine", "Fire"], answer: "Five", amharic: "5 በእንግሊዝኛ 'Five' (ፋይቭ) ይባላል።" },
+      { num: 6, word: "Six", prompt: "Choose the word corresponding to 6:", options: ["Sex", "Six", "Sick", "Fix"], answer: "Six", amharic: "6 በእንግሊዝኛ 'Six' (ሲክስ) ተብሎ ይጻፋል።" },
+      { num: 7, word: "Seven", prompt: "Which word corresponds to 7?", options: ["Seven", "Eleven", "Seventeen", "Sever"], answer: "Seven", amharic: "7 በእንግሊዝኛ 'Seven' (ሰቨን) ይባላል።" },
+      { num:
